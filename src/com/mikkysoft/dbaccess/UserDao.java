@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import com.mikkysoft.model.AccessType;
 import com.mikkysoft.model.Circle;
+import com.mikkysoft.model.National;
 import com.mikkysoft.model.Sector;
 import com.mikkysoft.model.Unit;
 import com.mikkysoft.model.User;
@@ -40,7 +41,10 @@ public class UserDao extends Dao {
 			user.setType(AccessType.valueOf(rs.getString("type")));
 			int circleId = rs.getInt("circleid");
 			Circle circle = null;
-			if (user.getType().equals(AccessType.ZONE)) {
+			if(user.getType().equals(AccessType.NATIONAL)){
+				circle = new National();
+				circle.setType(AccessType.NATIONAL);				
+			}else if (user.getType().equals(AccessType.ZONE)) {
 				circle = new Zone();
 				circle.setType(AccessType.ZONE);
 

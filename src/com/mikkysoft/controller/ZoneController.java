@@ -25,6 +25,7 @@ public class ZoneController extends CircleController{
 		}
 	}
 	
+	//get Zone instance by id
 	public Zone read(int zoneId) {
 		try {
 			return zoneDao.read(zoneId);

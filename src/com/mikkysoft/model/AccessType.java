@@ -1,7 +1,7 @@
 package com.mikkysoft.model;
 
 public enum AccessType {
-	UNIT, SECTOR, ZONE, ADMIN, NONE;
+	UNIT, SECTOR, ZONE, NATIONAL, ADMIN, NONE;
 
 	public String toString() {
 		switch (this) {
@@ -11,6 +11,8 @@ public enum AccessType {
 			return "SECTOR";
 		case ZONE:
 			return "ZONE";
+		case NATIONAL:
+			return "NATIONAL";
 		case ADMIN:
 			return "ADMIN";
 		default:

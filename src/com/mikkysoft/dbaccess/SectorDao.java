@@ -12,9 +12,9 @@ import com.mikkysoft.model.AccessType;
 import com.mikkysoft.model.Sector;
 import com.mikkysoft.model.Unit;
 import com.mikkysoft.model.Zone;
-
+//data access for sector 
 public class SectorDao extends SuperCircleDao<Unit> {
-	
+	//get unit details for sectors
 	private UnitDao unitDao;
 
 	public SectorDao() throws ClassNotFoundException, SQLException {

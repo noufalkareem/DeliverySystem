@@ -25,12 +25,16 @@
       <url-pattern>/delivery/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
+	  <role-name>NATIONAL</role-name>        
       <role-name>ZONE</role-name>
       <role-name>SECTOR</role-name>
       <role-name>UNIT</role-name>
       <role-name>ADMIN</role-name>
     </auth-constraint>
   </security-constraint>
+ <security-role>
+    <role-name>NATIONAL</role-name>
+  </security-role>  
   <security-role>
     <role-name>ZONE</role-name>
   </security-role>

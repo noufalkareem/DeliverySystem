@@ -6,6 +6,7 @@
 <%@page import="com.mikkysoft.controller.ZoneController"%>
 <%@page import="com.mikkysoft.model.AccessType"%>
 <%@page import="com.mikkysoft.model.User"%>
+<%@page import="com.mikkysoft.model.Zone"%>
 <%@page import="com.mikkysoft.controller.UserController"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -30,12 +31,69 @@ List<Sector> sectors = null;
 if(null != sectorsObj){
 	sectors = (List<Sector>) sectorsObj;
 }
+Object zonesObj = request.getAttribute("zones");
+List<Zone> zones = null;
+if(null != zonesObj){
+	zones = (List<Zone>) zonesObj;
+}
+
 %>
 <body>
 <div class="header" >
 	<div><a href="${pageContext.request.contextPath}/logout">Logout</a></div>
 	<div>Welcome<span><%=" "+user.getName() %></span></div>
 </div>
+
+
+
+<p id="national">
+<%if(display.equals("national")){
+	if(null != zones){	
+	%>
+<div class="pagetitle">	
+<h2>Available Zones</h2>
+</div>
+<table>
+<tr>
+<th>Name</th><th>Subscribers</th>
+<%
+for(Month month : Month.values()){
+	%>
+	<th><%=month %></th>
+	<%
+}
+%>
+</tr>
+
+<%
+			for(Zone zone : zones){
+	%>
+<tr>	
+	<td><a href="delivery?sector=<%=zone.getUnitId() %>"><%= zone.getName() %></a></td>
+	<td><%=zone.getNumberOfSubscribers() %></td>
+<%
+for(Month month : Month.values()){
+	%>
+	<td><%=zone.getDeliveredNumberByMonth(month) %></td>
+	<%
+}
+%>
+</tr>
+<%	
+			}
+
+%>
+
+<%}else{ %>
+	<tr><td>No zones found</td></tr>
+<% } 
+}%>
+
+
+</table>
+</p>
+
+
 
 
 <p id="zone">

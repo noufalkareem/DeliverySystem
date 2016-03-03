@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.mikkysoft.controller.NationalController;
 import com.mikkysoft.controller.SectorController;
 import com.mikkysoft.controller.SubscriberController;
 import com.mikkysoft.controller.UnitController;
@@ -20,6 +21,7 @@ import com.mikkysoft.model.Sector;
 import com.mikkysoft.model.Subscriber;
 import com.mikkysoft.model.Unit;
 import com.mikkysoft.model.User;
+import com.mikkysoft.model.Zone;
 
 /**
  * Servlet implementation class DeliveryServlet
@@ -47,23 +49,28 @@ public class DeliveryServlet extends HttpServlet {
 			// TODO Auto-generated method stub
 			HttpSession session = request.getSession();
 			User user = null;
-			Object userObj = session.getAttribute("user");
+			Object userObj = session.getAttribute("user");//user object
+			
 			if (null == userObj) {
-				user = UserController.getLoggedUser();
+				user = UserController.getLoggedUser();//current logged user is set in the UserController
 				User newUser = new User();
 				newUser.setName(user.getName());
 				newUser.setType(user.getType());
 				newUser.setCircle(user.getCircle());
-				request.getSession().setAttribute("user", newUser);
+				request.getSession().setAttribute("user", newUser);// setting the user in the session
 			} else {
 				user = (User) userObj;
 			}
-			String sectorId = request.getParameter("sector");
-			String unitId = request.getParameter("unit");
-			String userId = request.getParameter("userid");
+			String zoneId = request.getParameter("zone");
+			String sectorId = request.getParameter("sector");//get the sector id
+			String unitId = request.getParameter("unit");// get the unit id
+			String userId = request.getParameter("userid");// get the user id
 			AccessType display = AccessType.NONE;
 			int circleId = 0;
-			if (null != sectorId) {
+			if (null != zoneId) {
+				display = AccessType.ZONE;
+				circleId = Integer.parseInt(zoneId);
+			}else if (null != sectorId) {
 				display = AccessType.SECTOR;
 				circleId = Integer.parseInt(sectorId);
 			} else if (null != unitId) {
@@ -78,19 +85,25 @@ public class DeliveryServlet extends HttpServlet {
 				circleId = user.getCircle().getUnitId();
 			}
 
-			if (display.equals(AccessType.ZONE)) {
+			if (display.equals(AccessType.NATIONAL)) {
+				request.setAttribute("display", "national");
+				List<Zone> zones = new NationalController()
+						.getZones(circleId);
+				request.setAttribute("zones", zones);
+				getDisplay(request, response);
+			} else	if (display.equals(AccessType.ZONE)) {
 				request.setAttribute("display", "zone");
 				List<Sector> sectors = new ZoneController()
 						.getSectors(circleId);
 				request.setAttribute("sectors", sectors);
-				getZoneDisplay(request, response);
+				getDisplay(request, response);
 			} else if (display.equals(AccessType.SECTOR)) {
 
 				SectorController sectorController = new SectorController();
 				List<Unit> units = sectorController.getUnitsBySector(circleId);
 				request.setAttribute("units", units);
 				request.setAttribute("display", "sector");
-				getSectorDisplay(request, response);
+				getDisplay(request, response);
 
 			} else if (display.equals(AccessType.UNIT)) {
 				String mode = request.getParameter("mode");
@@ -144,15 +157,22 @@ public class DeliveryServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 	}
+	
+//	private void getNationalDisplay(HttpServletRequest request,
+//			HttpServletResponse response) throws ServletException, IOException {
+//		RequestDispatcher dispatcher = request
+//				.getRequestDispatcher("/jsp/home.jsp");
+//		dispatcher.include(request, response);
+//	}
+//
+//	private void getZoneDisplay(HttpServletRequest request,
+//			HttpServletResponse response) throws ServletException, IOException {
+//		RequestDispatcher dispatcher = request
+//				.getRequestDispatcher("/jsp/home.jsp");
+//		dispatcher.include(request, response);
+//	}
 
-	private void getZoneDisplay(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request
-				.getRequestDispatcher("/jsp/home.jsp");
-		dispatcher.include(request, response);
-	}
-
-	private void getSectorDisplay(HttpServletRequest request,
+	private void getDisplay(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher dispatcher = request
 				.getRequestDispatcher("/jsp/home.jsp");
