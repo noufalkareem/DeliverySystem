@@ -69,7 +69,7 @@ for(Month month : Month.values()){
 			for(Zone zone : zones){
 	%>
 <tr>	
-	<td><a href="delivery?sector=<%=zone.getUnitId() %>"><%= zone.getName() %></a></td>
+	<td><a href="delivery?zone=<%=zone.getUnitId() %>"><%= zone.getName() %></a></td>
 	<td><%=zone.getNumberOfSubscribers() %></td>
 <%
 for(Month month : Month.values()){
